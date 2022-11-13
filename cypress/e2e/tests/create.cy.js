@@ -1,73 +1,42 @@
-describe("make item", () => {
+describe("Validate user input", () => {
   beforeEach(() => {
     cy.clearLocalStorage();
-    cy.visit("http://127.0.0.1:5500/");
+    cy.visit("/");
     cy.wait(1000);
-    cy.get(".btn-close:visible").click();
+    cy.get(".btn-close:visible").click({ force: true });
+    cy.get("button[data-auth='login']:visible").click({ force: true });
     cy.wait(1000);
-    cy.get("button[data-auth='login']:visible").click();
-    cy.wait(1500);
     cy.get("input[type='email']:visible")
       .should("exist")
       .type(Cypress.env("EMAIL"));
     cy.get("input[type='password']:visible")
       .should("exist")
       .type(Cypress.env("PASSWORD"));
-    cy.get(".btn-success:visible").click();
-    cy.wait(500);
-    cy.visit("http://127.0.0.1:5500/?view=post");
+    cy.get(".btn-success:visible").click({ force: true });
+    cy.wait(2000);
+    cy.then(
+      () => expect(window.localStorage.getItem("profile")).to.not.be.null
+    );
+    cy.then(() => expect(window.localStorage.getItem("token")).to.not.be.null);
+    cy.url().should("include", "profile");
   });
-  it("creates a post", () => {
-    cy.wait(500);
-    cy.visit("127.0.0.1:5500/?view=post");
-    // IS NOW LOGGED IN
-    cy.url().should("include", "post");
-    cy.get("#postTitle").should("exist").type("cypress test");
-    cy.get("#postTags").should("exist").type("something");
-    cy.get("#postMedia")
+
+  it("Validates Title input", () => {
+    cy.get("footer [data-visible='loggedIn']:visible")
+      .contains("New Post")
+      .click();
+    cy.get("#postTitle:visible")
+      .should("exist")
+      .type("Test title")
+      .should("have.value", "Test title");
+    cy.get("#postTags:visible").should("exist").type("Cypress, CA, e2e");
+    cy.get("#postMedia:visible")
       .should("exist")
       .type(
-        "https://imgs.search.brave.com/4mDAQwXBcjppCFXUjMrcIcExIjnUq-oWMgGfQu_qNZU/rs:fit:713:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC43/cVIzckNCX2lLQ0NQ/elVVbUh3eDhnSGFF/NyZwaWQ9QXBp"
+        "https://compote.slate.com/images/697b023b-64a5-49a0-8059-27b963453fb1.gif"
       );
-    cy.wait(1000);
-    cy.get("#postBody").should("exist").type("test");
-    cy.get('button[data-action="submit"]').should("exist").click();
-    cy.wait(1000);
-    cy.url().should("include", "view=post&postId=");
-    cy.wait(500);
-    cy.get('button[data-action="delete"]:visible').click();
-    cy.wait(500);
-  });
-  // TITLE REQUIRED AND MEDIA MUST BE AN URL IF ADDED
-  it("Validates inputs when creating a post", () => {
-    cy.visit("127.0.0.1:5500/?view=post");
+    cy.get("#postBody:visible").should("exist").type("Test post");
+    cy.get("span[data-action='publish']:visible").should("exist").click();
     cy.url().should("include", "post");
-    cy.visit("127.0.0.1:5500/?view=post");
-    cy.wait(1000);
-    cy.get('a[href="/?view=post"]').click();
-    cy.wait(1000);
-    cy.url().should("include", "post");
-    cy.get('button[data-action="submit"]').click();
-    cy.get("#postTitle:invalid")
-      .invoke("prop", "validationMessage")
-      .should("exist");
-    cy.wait(500);
-    cy.get("#postTitle").should("exist").type("test");
-    cy.get("#postMedia").should("exist").type("no an url");
-    cy.get('button[data-action="submit"]').click();
-    cy.get("#postMedia:invalid")
-      .invoke("prop", "validationMessage")
-      .should("exist");
-    cy.wait(1000);
-    cy.get("#postTitle").should("exist").clear();
-    cy.get("#postMedia").should("exist").clear();
-    cy.get("#postMedia")
-      .should("exist")
-      .type("https://lorempicsum.com/300*300");
-    cy.get("#postBody").should("exist").type("Test");
-    cy.get('button[data-action="submit"]').click();
-    cy.get("#postTitle:invalid")
-      .invoke("prop", "validationMessage")
-      .should("exist");
   });
 });
