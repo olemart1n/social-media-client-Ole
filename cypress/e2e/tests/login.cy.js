@@ -1,6 +1,6 @@
 describe("login", () => {
   beforeEach(() => {
-    cy.visit("127.0.0.1:5500/");
+    cy.visit("127.0.0.1:8080/");
   });
   it("checks password", () => {
     cy.wait(500);

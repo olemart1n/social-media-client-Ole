@@ -1,6 +1,6 @@
 {
     "name": "css-frameworks-ca",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -14,7 +14,7 @@
         "test-e2e": "cypress open",
         "test-e2e-cli": "cypress run",
         "test": "npm run test-unit && npm run test-e2e-cli",
-        "live-server": "live-server"
+        "live-server": "live-server --port 8080"
     },
     "keywords": [],
     "author": "",
