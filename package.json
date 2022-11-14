@@ -14,7 +14,7 @@
         "test-e2e": "cypress open",
         "test-e2e-cli": "cypress run",
         "test": "npm run test-unit && npm run test-e2e-cli",
-        "live-server": "live-server --port 5500"
+        "live-server": "live-server --port 8080"
     },
     "keywords": [],
     "author": "",

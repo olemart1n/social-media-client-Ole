@@ -1,7 +1,7 @@
 describe("Validate user input", () => {
   beforeEach(() => {
     cy.clearLocalStorage();
-    cy.visit("127.0.0.1:5500/");
+    cy.visit("127.0.0.1:8080/");
     cy.wait(1000);
     cy.get(".btn-close:visible").click({ force: true });
     cy.get("button[data-auth='login']:visible").click({ force: true });
